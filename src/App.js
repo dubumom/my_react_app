@@ -1,5 +1,8 @@
 import { Component } from 'react';
 import './App.css';
+import Myheader from './components/Myheader';
+import Myarticle from './components/Myarticle';
+import Mynav from './components/Mynav';
 
 // 최근에 함수형으로 바뀌고 있는 추세
 /*
@@ -21,51 +24,28 @@ function App() {
 //     )
 //   }
 // }
-class Myheader extends Component {
-  render() {
-    console.log(this);
-    return (
-      // 가상의 부모라도 부모박스가 있어야함 <></>
-      <header>
-        <h1 className="logo">{this.props.title}</h1>
-        <p>{this.props.desc}</p>
-    </header>
-    )
-  }
-}
-class Myarticle extends Component {
-  render() {
-    return (
-      <section>
-        <article>
-          <h2>HTML</h2>
-          <p>Hypertext markup Language</p>
-        </article>
-      </section>
-    )
-  }
-}
-class Mynav extends Component {
-  render() {
-    return (
-      <nav>
-        <ul>
-          <li><a href="">HTML</a></li>
-          <li><a href="">CSS</a></li>
-          <li><a href="">JavaScript 입니당</a></li>
-        </ul>
-      </nav>
-    )
-  }
-}
 
 class App extends Component {
+  constructor(props){
+    super(props); //부모컴포넌트에서 만든 값을 쓰고 싶을 때 super();
+    this.state = {
+      subject:{
+        title : 'react',
+        desc : 'Single Page Application'
+      },
+      menus: [
+        {id:1, title:'HTML', desc : 'Hypertext markup Language'},
+        {id:2, title:'CSS', desc : 'CSS id for design'},
+        {id:3, title:'javeScript', desc : 'javeScript is for interaction'}
+      ]
+    }
+  }
   render() {
     return (
       <div className="App">
-      <Myheader title="React" desc="Single Page Application"/>
-      <Mynav/>
-      <Myarticle/>
+      <Myheader title={this.state.subject.title} desc={this.state.subject.desc}/>
+      <Mynav data={this.state.menus}/>
+      <Myarticle title="HTML" desc="Hypertext markup Language"/>
     </div>
     )
   }
