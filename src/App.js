@@ -1,4 +1,4 @@
-import { Component, setState } from 'react';
+import { Component, forwardRef, setState } from 'react';
 import './App.css';
 import Myheader from './components/Myheader';
 import Mynav from './components/Mynav';
@@ -48,7 +48,7 @@ class App extends Component {
       _article = <ReadArticle title={_title} desc={_desc}/>
     } else if(this.state.mode === 'read'){
       let _data = this.getReadArticle();
-      _article = <ReadArticle title={_data.title} desc={_data.desc}/>
+      _article = <ReadArticle title={_data.title} desc={_data.desc} onChangeMode={(val)=>{this.setState({mode:val})}}/>
     } else if(this.state.mode === 'create'){
   
       _article = <CreateArticle onSubmit={(_title,_desc)=>{
@@ -64,11 +64,21 @@ class App extends Component {
         });
       }}/>
     } else if(this.state.mode === 'update'){
+
       let _data = this.getReadArticle();
-      _article = <UpdateArticle data={_data} onSubmit={(_title,_desc)=>{
-        // this.setState({
-        //   menus: _menus
-        // });
+
+      _article = <UpdateArticle data={_data} onSubmit={(_id,_title,_desc)=>{
+        console.log(_id,_title,_desc)
+        let _menus = Array.from(this.state.menus);
+        _menus.forEach((item,index)=>{
+          if(item.id === _id){
+            _menus[index] = {id:_id, title:_title, desc:_desc}
+          }
+        });
+        this.setState({
+          menus: _menus,
+          mode:'read'
+        });
       }}/>
     }
     return _article;
@@ -102,7 +112,31 @@ class App extends Component {
         }}/>
         {this.getArticles()}
         <hr/>
-        <Controls onChangeMode={(val)=>{this.setState({mode:val})}}/>
+        <Controls mode={this.state.mode} onChangeMode={(val)=>{
+          if(val === 'delete'){
+            if(window.confirm('정말 삭제할까요?')){
+              let _menus = [...this.state.menus];
+              _menus.forEach((item,idx)=>{
+                if(item.id === this.state.selected_id){
+                  _menus.splice(idx,1);
+                }
+              })
+              //let i = 0;
+              // while(i<_menus.length){
+              //   if(_menus[i].id === this.state.selected_id){
+              //     _menus.splice(i,1);
+              //     break;
+              //   }
+              //   i++;
+              //}
+              this.setState({
+                menus:_menus,
+                mode:'welcome'
+              })
+            }
+          }
+          this.setState({mode:val});
+        }}/>
       </div>
     )
   }
