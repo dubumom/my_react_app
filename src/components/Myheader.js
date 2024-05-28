@@ -1,6 +1,9 @@
 import { Component } from 'react';
 
 class Myheader extends Component {
+  shouldComponentUpdate(){
+    return false; // 변화 없으니까 기본값을 false
+  }
   render() {
     console.log("마이 헤더 실행");
     return (

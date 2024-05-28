@@ -21,7 +21,7 @@ class App extends Component {
     super(props);
     this.max_id = 3;
     this.state = {
-      mode:'create',
+      mode:'welcome',
       selected_id:2,
       subject:{
         title:'react',
@@ -62,8 +62,11 @@ class App extends Component {
       _article = <CreateArticle onSubmit={(_title,_desc)=>{
         
         this.max_id += 1;
-        // this.state.menus.push({id:this.max_id, title:_title, desc:_desc}); 직접 밀어넣기
-        let _menus = this.state.menus.concat({id:this.max_id, title:_title, desc:_desc}); // 배열과 배열 합치기
+        // this.state.menus.push({id:this.max_id, title:_title, desc:_desc}); // 직접 밀어넣기 - 이전값과 이후값을 비교 불가 (원본수정).
+        // let _menus = this.state.menus.concat({id:this.max_id, title:_title, desc:_desc}); // 배열과 배열 합치기 이전값과 이후값을 비교 가능 (원본유지).
+        // let _menus = Array.from(this.state.menus);
+        let _menus = [...this.state.menus];
+        _menus.push({id:this.max_id, title:_title, desc:_desc});
         this.setState({
           menus: _menus
         });
