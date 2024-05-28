@@ -5,6 +5,7 @@ import Mynav from './components/Mynav';
 import ReadArticle from './components/ReadArticle';
 import Controls from './components/Controls';
 import CreateArticle from './components/CreateArticle';
+import UpdateArticle from './components/UpdateArticle';
 
 // 함수형 (최근 추세)
 // function App() {
@@ -38,27 +39,18 @@ class App extends Component {
       ]
     };
   }
-  render() {
-    console.log('App 실행')
+  getArticles(){ //코드 분리해서 정리 -> refactoring
+
     let _title, _desc, _article = null;
     if(this.state.mode === 'welcome'){
       _title =this.state.welcome.title;
       _desc =this.state.welcome.desc;
       _article = <ReadArticle title={_title} desc={_desc}/>
-    }else if(this.state.mode === 'read'){
-      let i = 0;
-      while(i<this.state.menus.length){
-        let data = this.state.menus[i];
-        if(data.id === this.state.selected_id){
-          _title = data.title;
-          _desc = data.desc;
-          
-        }
-        i++;
-      }
-      _article = <ReadArticle title={_title} desc={_desc}/>
+    } else if(this.state.mode === 'read'){
+      let _data = this.getReadArticle();
+      _article = <ReadArticle title={_data.title} desc={_data.desc}/>
     } else if(this.state.mode === 'create'){
-
+  
       _article = <CreateArticle onSubmit={(_title,_desc)=>{
         
         this.max_id += 1;
@@ -71,7 +63,30 @@ class App extends Component {
           menus: _menus
         });
       }}/>
+    } else if(this.state.mode === 'update'){
+      let _data = this.getReadArticle();
+      _article = <UpdateArticle data={_data} onSubmit={(_title,_desc)=>{
+        // this.setState({
+        //   menus: _menus
+        // });
+      }}/>
     }
+    return _article;
+  }
+  getReadArticle(){
+    let i = 0;
+    while(i<this.state.menus.length){
+      let data = this.state.menus[i];
+      if(data.id === this.state.selected_id){
+        return data;
+        break;
+      }
+      i++;
+    }
+  }
+  render() {
+    console.log('App 실행')
+    
     return (
       <div className="App">
         {/* props title/ desc */}
@@ -85,7 +100,7 @@ class App extends Component {
             selected_id:Number(id)
           })
         }}/>
-        {_article}
+        {this.getArticles()}
         <hr/>
         <Controls onChangeMode={(val)=>{this.setState({mode:val})}}/>
       </div>
