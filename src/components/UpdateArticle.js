@@ -6,7 +6,8 @@ class UpdateArticle extends Component {
     this.state = {
       id : this.props.data.id,
       title : this.props.data.title,
-      desc : this.props.data.desc
+      desc : this.props.data.desc,
+      level : this.props.data.level
     }
   }
   inputFormHander(e){
@@ -23,7 +24,7 @@ class UpdateArticle extends Component {
           <form method="post" onSubmit={(e)=>{
             e.preventDefault();
             //debugger; // 이전까지만 실행하고 그 이후는 멈춤
-            this.props.onSubmit(this.state.id, e.target.title.value, e.target.desc.value);
+            this.props.onSubmit(this.state.id, e.target.title.value, e.target.desc.value, e.target.level);
           }}>
             <input type="hidden" name="id" value={this.state.id}></input>
             <p>
@@ -46,6 +47,11 @@ class UpdateArticle extends Component {
                 this.inputFormHander(e);
               }}
               ></textarea>
+            </p>
+            <p>
+              <input type="number" min="4" name="level" placeholder="level" value={this.state.level}  onChange={e=>{
+                this.inputFormHander(e);
+              }}/>
             </p>
             <button type="submit">입력</button>
           </form>

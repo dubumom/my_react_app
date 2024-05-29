@@ -33,46 +33,48 @@ class App extends Component {
         desc:'Welcome to React'
       },
       menus:[
-        {id:1, title:'HTML',desc:'Hypertext markup language'},
-        {id:2, title:'CSS',desc:'CSS is for design'},
-        {id:3, title:'JS',desc:'JS is for interaction'}
+        {id:1, title:'HTML',desc:'Hypertext markup language', level:1},
+        {id:2, title:'CSS',desc:'CSS is for design', level:2},
+        {id:3, title:'JS',desc:'JS is for interaction', level:3}
       ]
     };
   }
   getArticles(){ //코드 분리해서 정리 -> refactoring
 
-    let _title, _desc, _article = null;
+    let _title, _desc, _article, _level = null;
     if(this.state.mode === 'welcome'){
       _title =this.state.welcome.title;
       _desc =this.state.welcome.desc;
       _article = <ReadArticle title={_title} desc={_desc}/>
     } else if(this.state.mode === 'read'){
       let _data = this.getReadArticle();
-      _article = <ReadArticle title={_data.title} desc={_data.desc} onChangeMode={(val)=>{this.setState({mode:val})}}/>
+      _article = <ReadArticle title={_data.title} desc={_data.desc} level={_data.level} onChangeMode={(val)=>{this.setState({mode:val})}}/>
     } else if(this.state.mode === 'create'){
   
-      _article = <CreateArticle onSubmit={(_title,_desc)=>{
+      _article = <CreateArticle onSubmit={(_title,_desc,_level)=>{
         
         this.max_id += 1;
         // this.state.menus.push({id:this.max_id, title:_title, desc:_desc}); // 직접 밀어넣기 - 이전값과 이후값을 비교 불가 (원본수정).
         // let _menus = this.state.menus.concat({id:this.max_id, title:_title, desc:_desc}); // 배열과 배열 합치기 이전값과 이후값을 비교 가능 (원본유지).
         // let _menus = Array.from(this.state.menus);
         let _menus = [...this.state.menus];
-        _menus.push({id:this.max_id, title:_title, desc:_desc});
+        _menus.push({id:this.max_id, title:_title, desc:_desc, level:_level});
         this.setState({
-          menus: _menus
+          menus: _menus,
+          mode:'read',
+          selected_id : this.max_id
         });
       }}/>
     } else if(this.state.mode === 'update'){
 
       let _data = this.getReadArticle();
 
-      _article = <UpdateArticle data={_data} onSubmit={(_id,_title,_desc)=>{
+      _article = <UpdateArticle data={_data} onSubmit={(_id,_title,_desc,_level)=>{
         console.log(_id,_title,_desc)
         let _menus = Array.from(this.state.menus);
         _menus.forEach((item,index)=>{
           if(item.id === _id){
-            _menus[index] = {id:_id, title:_title, desc:_desc}
+            _menus[index] = {id:_id, title:_title, desc:_desc, level:_level}
           }
         });
         this.setState({
